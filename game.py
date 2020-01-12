@@ -9,21 +9,21 @@ obj_board=Screen(HEIGHT,MAXWIDTH)
 
 obj_mando=Mando(0,0)  #run,fly
 
-
-
-
 counter=3
 timetrack=time.time()
 
 obj_mando.place_mando(counter,HEIGHT-3,obj_board.grid)
+# obj_board.show_all()
+
 while True:
     if time.time() - timetrack >= 0.15:
         os.system('clear')
         timetrack=time.time()
         obj_mando.erase_mando(obj_board.grid)
         obj_mando.generate_shape()
-        obj_mando.place_mando(counter,HEIGHT-3,obj_board.grid)
-        obj_board.show_all()
+        obj_mando.place_mando(counter+PLACEWIDTH,HEIGHT-3,obj_board.grid)
+        obj_board.show_board(counter)
+        # obj_board.show_all()
 
         if counter<MAXWIDTH-WIDTH:
             counter+=1
