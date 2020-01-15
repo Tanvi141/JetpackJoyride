@@ -12,16 +12,16 @@ class Screen:
         self.__rows = rows
         self.__columns = columns
         self.grid = np.zeros((HEIGHT, MAXWIDTH), dtype='<U20')
-        self.grid[:] = '.'
+        self.grid[:] = ' '
+
         for i in range(self.__columns):
             if(i%5==0):
-                self.grid[:,i]='!'
-
+                self.grid[8,i]=COIN
     def show_board(self, a):
         '''Shows grid from a of WIDTH width
         '''
         for i in range(self.__rows):
                 for j in range(a, a+WIDTH):  # WIDTH columns at a time
                     print(self.grid[i][j], end='')
-                print(a)
+                print()
 
