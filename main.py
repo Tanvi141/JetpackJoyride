@@ -2,6 +2,7 @@ import os
 import time
 from board import *
 from mando import *
+from obstacles import *
 from scenery import *
 from headerfile import *
 from alarmexception import *
@@ -39,11 +40,18 @@ obj_scenery.create_sky(obj_board.grid)
 counter = 3
 timetrack = time.time()
 starttime = time.time()
-
-# obj_mando.place_mando(counter,HEIGHT-3,obj_board.grid)
-# obj_board.show_all()
 refreshcount = 0
+
+
+
+
+
+obj_lol=DiagonalBeam(20,11)
+obj_lol.place(obj_board.grid)
+
+
 while True:
+
     if time.time() - timetrack >= 0.15:
         timetrack = time.time()
         obj_mando.erase_mando(obj_board.grid)
@@ -90,7 +98,8 @@ while True:
 
         os.system('clear')
         print("Time:", 150 -
-              (round(time.time()) - round(starttime)))
+              (round(time.time()) - round(starttime)), end='\t\t\t')
+        print("Lives:", obj_mando.lives)
         print(Fore.YELLOW + "$$:" + Fore.RESET, obj_mando.coins)
         obj_board.show_board(counter)
         # obj_board.show_all()

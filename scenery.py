@@ -18,3 +18,5 @@ class Scenery:
     def create_sky(self, grid):
         grid[0:SKY,
              0:MAXWIDTH] = np.tile(self.__skyblock, (int)(MAXWIDTH/2))
+    
+    # def create_coins():

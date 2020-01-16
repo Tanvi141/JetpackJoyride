@@ -19,6 +19,8 @@ class Mando:
         self.__empty[:] = ' '
 
         self.coins = 0
+        self.lives = 3
+        
 
     def generate_shape(self):
         '''Gives Mando's body appropriate shape according to dirn and type of movement
@@ -78,9 +80,9 @@ class Mando:
 
         # now move him up or down according to the fly flag
         if fly == 1 and self.__y > SKY+1:
-            self.__y -= 1   #do not change!!!
+            self.__y -= 1  # do not change!!!
 
         elif (fly == 0) and self.__y < HEIGHT-GROUND-2:
-            self.__y += 2   #do not change!! (only 2 or 3 acceptable)
+            self.__y += 2  # do not change!! (only 2 or 3 acceptable)
             if self.__y > HEIGHT-GROUND-2:
                 self.__y = HEIGHT-GROUND-2
