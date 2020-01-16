@@ -47,29 +47,40 @@ while True:
     if time.time() - timetrack >= 0.15:
         timetrack = time.time()
         obj_mando.erase_mando(obj_board.grid)
-        obj_mando.generate_shape()
 
         letter = user_input()
         if letter == 'q':
             quit()
         elif letter == 'd':
-            obj_mando.set_values(2, 1, -100, counter)
+            # set 3rd arg as -100 if want to keep in air on d
+            obj_mando.set_values(5, 1, 0, counter)
             refreshcount = 0
         elif letter == 'a':
-            obj_mando.set_values(-1, -1, -100, counter)
+            # set 3rd arg as -100 if want to keep in aiif counter < MAXWIDTH-WIDTH on w
+            obj_mando.set_values(-3, -1, 0, counter)
             refreshcount = 0
         elif letter == 'w':
             # unsure if second arg should be 0 or -100
-            obj_mando.set_values(1, 0, 1, counter)
+            if counter < MAXWIDTH-WIDTH:
+                obj_mando.set_values(1, 0, 1, counter)
+            else:
+                obj_mando.set_values(0, 0, 1, counter)
             refreshcount = 0
         elif refreshcount == 2:
-            obj_mando.set_values(1, 0, 0, counter)
+            if counter < MAXWIDTH-WIDTH:
+                obj_mando.set_values(1, 0, 0, counter)
+            else:
+                obj_mando.set_values(0, 0, 0, counter)
             refreshcount = 0
         else:
             # obj_mando.set_values(1,0,0)
-            obj_mando.set_values(1, -100, -100, counter)
+            if counter < MAXWIDTH-WIDTH:
+                obj_mando.set_values(1, -100, -100, counter)
+            else:
+                obj_mando.set_values(0, -100, -100, counter)
             refreshcount += 1
 
+        obj_mando.generate_shape()
         obj_mando.place_mando(obj_board.grid)
 
         timeleft = 150 - (round(time.time()) - round(starttime))

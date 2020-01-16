@@ -17,6 +17,8 @@ class Screen:
         for i in range(self.__columns):
             if(i%5==0):
                 self.grid[8,i]=COIN
+
+                
     def show_board(self, a):
         '''Shows grid from a of WIDTH width
         '''
