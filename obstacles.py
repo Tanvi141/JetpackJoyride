@@ -11,13 +11,14 @@ class Obstacles:
         self._y = 0  # declaring variable with some dummy value
         self._xrange = 0  # declaring variable with some dummy value
         self._yrange = 0  # declaring variable with some dummy value
+        self.__killflag = 0 #this is used to make sure that once mando comes into contact with laser once he won't lose more than one life at a time
 
     def overlap(self, grid):
         '''returns 0 if can correctly place, else returns 1
         '''
         m = grid[self._y-1:self._y+self._yrange+1, self._x-1:self._x +
                  self._xrange+1]  # padding of spaces set around this
-        if np.count_nonzero(m == ' ') != (self._yrange*self._xrange):
+        if np.count_nonzero(m == ' ') != (self._yrange+2)*(self._xrange+2):
             return 1
         else:
             return 0
@@ -60,8 +61,8 @@ class DiagonalBeam(Obstacles):
         super().__init__(1)
         self._x = x
         self._y = y
-        self._xrange = 10
         self._yrange = 8
+        self._xrange = self._yrange*2
     
     def place(self, grid):
         for i in range(self._yrange):
@@ -81,7 +82,10 @@ class DiagonalBeam(Obstacles):
     #     **
     #       **
     #         **
-    # 5x10
+    #           **
+    #             **
+    #               **
+    # 8x16
 
     # **
     # **

@@ -20,7 +20,6 @@ class Mando:
 
         self.coins = 0
         self.lives = 3
-        
 
     def generate_shape(self):
         '''Gives Mando's body appropriate shape according to dirn and type of movement
@@ -43,7 +42,7 @@ class Mando:
             self.__body[2] = [RED+'/'+RESET, ' ', RED+'>'+RESET]
 
     def place_mando(self, grid):
-        '''Places the mando at appropriate position with torso at x,y and counts the coins
+        '''Places the mando at appropriate position with torso at x,y and counts the coinss
         '''
         x = self.__x
         y = self.__y
@@ -52,14 +51,14 @@ class Mando:
         grid[y-1:y+2, x-1:x+2] = self.__body
 
     def erase_mando(self, grid):
-        '''Erases mando off the board
+        '''Erases mando off the board, reduces lives
         '''
         x = self.__x
         y = self.__y
         grid[y-1:y+2, x-1:x+2] = self.__empty
 
-    def set_values(self, x, dirn, fly, counter):
-        '''sets appropriate values of mando
+    def set_values(self, x, dirn, fly, counter,grid):
+        '''sets appropriate values of mando and returns 1 if in path of obstacle 
         '''
         # if any parameter is passed as -100 that means it should remain unchanged
 
@@ -86,3 +85,10 @@ class Mando:
             self.__y += 2  # do not change!! (only 2 or 3 acceptable)
             if self.__y > HEIGHT-GROUND-2:
                 self.__y = HEIGHT-GROUND-2
+
+        m = grid[self.__y-1:self.__y+2, self.__x-1:self.__x+2]
+        if np.count_nonzero(m == STAR)>0:
+            return 1
+        
+        return 0
+        
