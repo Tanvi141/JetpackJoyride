@@ -1,5 +1,6 @@
 from headerfile import *
 import numpy as np
+from mando import *
 
 
 class Obstacles:
@@ -11,7 +12,7 @@ class Obstacles:
         self._y = 0  # declaring variable with some dummy value
         self._xrange = 0  # declaring variable with some dummy value
         self._yrange = 0  # declaring variable with some dummy value
-        self.__killflag = 0 #this is used to make sure that once mando comes into contact with laser once he won't lose more than one life at a time
+        self.__killflag = 0  # this is used to make sure that once mando comes into contact with laser once he won't lose more than one life at a time
 
     def overlap(self, grid):
         '''returns 0 if can correctly place, else returns 1
@@ -25,6 +26,29 @@ class Obstacles:
 
     def place(self, grid):
         pass
+
+    def check_collision_mando(self, obj_mando):
+        '''returns 1 if mando has collided with this object
+        '''
+        x = obj_mando.get_x()
+        y = obj_mando.get_y()
+
+
+        if x+1 >= self._x and x-1 <= self._x + self._xrange and y+1 >= self._y and y-1 <= self._y+self._yrange:
+            # then mando is being hit by laser
+            if self.__killflag == 0:
+                # so he has just come into contact with the laser
+                obj_mando.lives-=1
+            else:
+                # he keeps moving through the same
+                pass
+            self.__killflag = 1
+
+        else:
+            #he is not in contact with the laser
+            self.__killflag = 0
+        
+        return obj_mando.lives
 
 
 class HorizontalBeam(Obstacles):
@@ -63,19 +87,11 @@ class DiagonalBeam(Obstacles):
         self._y = y
         self._yrange = 8
         self._xrange = self._yrange*2
-    
+
     def place(self, grid):
         for i in range(self._yrange):
-            grid[self._y+i][self._x+2*i]=STAR
-            grid[self._y+i][self._x+2*i+1]=STAR
-
-
-
-
-
-
-
-
+            grid[self._y+i][self._x+2*i] = STAR
+            grid[self._y+i][self._x+2*i+1] = STAR
 
     # **
     #   **

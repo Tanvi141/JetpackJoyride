@@ -21,6 +21,12 @@ class Mando:
         self.coins = 0
         self.lives = 3
 
+    def get_x(self):
+        return self.__x
+
+    def get_y(self):
+        return self.__y
+
     def generate_shape(self):
         '''Gives Mando's body appropriate shape according to dirn and type of movement
         '''
@@ -57,7 +63,7 @@ class Mando:
         y = self.__y
         grid[y-1:y+2, x-1:x+2] = self.__empty
 
-    def set_values(self, x, dirn, fly, counter,grid):
+    def set_values(self, x, dirn, fly, counter, grid):
         '''sets appropriate values of mando and returns 1 if in path of obstacle 
         '''
         # if any parameter is passed as -100 that means it should remain unchanged
@@ -79,16 +85,17 @@ class Mando:
 
         # now move him up or down according to the fly flag
         if fly == 1 and self.__y > SKY+1:
-            self.__y -= 1  # do not change!!!
+            self.__y -= 1
+            if self.__y < SKY+1:
+                self.__y = SKY+1
 
         elif (fly == 0) and self.__y < HEIGHT-GROUND-2:
-            self.__y += 2  # do not change!! (only 2 or 3 acceptable)
+            self.__y += 1
             if self.__y > HEIGHT-GROUND-2:
                 self.__y = HEIGHT-GROUND-2
 
         m = grid[self.__y-1:self.__y+2, self.__x-1:self.__x+2]
-        if np.count_nonzero(m == STAR)>0:
+        if np.count_nonzero(m == STAR) > 0:
             return 1
-        
+
         return 0
-        

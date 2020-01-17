@@ -43,9 +43,9 @@ timetrack = time.time()
 starttime = time.time()
 refreshcount = 0
 
-obst=[]
+obst = []
 
-for i in range(20):
+for i in range(1):
     x=random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
     y=random.randint(SKY+1,HEIGHT-GROUND-1)
     obj=DiagonalBeam(x,y)
@@ -82,7 +82,7 @@ for i in range(20):
     obj.place(obj_board.grid)
     obst.append(obj)
 
-  
+
 while True:
 
     if time.time() - timetrack >= 0.15:
@@ -91,48 +91,50 @@ while True:
         for ob in obst:
             ob.place(obj_board.grid)
 
-        killflag = 0
+        0
         letter = user_input()
         if letter == 'q':
             quit()
         elif letter == 'd':
             # set 3rd arg as -100 if want to keep in air on d
-            killflag = obj_mando.set_values(5, 1, 0, counter, obj_board.grid)
+            obj_mando.set_values(5, 1, 0, counter, obj_board.grid)
             refreshcount = 0
         elif letter == 'a':
             # set 3rd arg as -100 if want to keep in aiif counter < MAXWIDTH-WIDTH on w
-            killflag = obj_mando.set_values(-3, -1, 0, counter, obj_board.grid)
+            obj_mando.set_values(-3, -1, 0, counter, obj_board.grid)
             refreshcount = 0
         elif letter == 'w':
             # unsure if second arg should be 0 or -100
             if counter < MAXWIDTH-WIDTH:
-                killflag = obj_mando.set_values(
+                obj_mando.set_values(
                     1, 0, 1, counter, obj_board.grid)
             else:
-                killflag = obj_mando.set_values(
+                obj_mando.set_values(
                     0, 0, 1, counter, obj_board.grid)
             refreshcount = 0
         elif refreshcount == 2:
             if counter < MAXWIDTH-WIDTH:
-                killflag = obj_mando.set_values(
+                obj_mando.set_values(
                     1, 0, 0, counter, obj_board.grid)
             else:
-                killflag = obj_mando.set_values(
+                obj_mando.set_values(
                     0, 0, 0, counter, obj_board.grid)
             refreshcount = 0
         else:
             # obj_mando.set_values(1,0,0)
             if counter < MAXWIDTH-WIDTH:
-                killflag = obj_mando.set_values(
+                obj_mando.set_values(
                     1, -100, -100, counter, obj_board.grid)
             else:
-                killflag = obj_mando.set_values(
+                obj_mando.set_values(
                     0, -100, -100, counter, obj_board.grid)
             refreshcount += 1
 
-        # if (killflag):
-        #     for ob in obst:
-
+        
+        for ob in obst:
+            if(ob.check_collision_mando(obj_mando) == 0):
+                print('Lives over!!')
+                quit()
 
         obj_mando.generate_shape()
         obj_mando.place_mando(obj_board.grid)

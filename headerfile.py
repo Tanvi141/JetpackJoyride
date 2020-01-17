@@ -4,7 +4,7 @@ init()
 DEBUG = 'a'
 # sizes
 HEIGHT = 30
-MAXWIDTH = 800
+MAXWIDTH = 200
 WIDTH = 90
 PLACEWIDTH = 40
 SKY = 3
@@ -21,4 +21,4 @@ GCOLOR = Fore.MAGENTA
 
 # misc
 COIN = Fore.YELLOW+'$'+Fore.RESET
-STAR = Fore.LIGHTYELLOW_EX+'*'+Fore.RESET
+STAR = Fore.LIGHTGREEN_EX+'w'+Fore.RESET
