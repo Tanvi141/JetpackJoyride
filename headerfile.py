@@ -1,4 +1,4 @@
-from colorama import Fore, init
+from colorama import Fore, init,Back, Style
 init()
 
 DEBUG = 'a'
@@ -11,14 +11,14 @@ SKY = 3
 GROUND = 3
 
 # colors
-RESET = Fore.RESET
+RESET = Style.RESET_ALL
 GREY = Fore.LIGHTBLACK_EX
 CYAN = Fore.LIGHTCYAN_EX
 RED = Fore.LIGHTRED_EX
 BLUE = Fore.BLUE
-GCOLOR = Fore.MAGENTA
+GCOLOR = Fore.LIGHTBLUE_EX + Back.BLACK
 
 
 # misc
-COIN = Fore.YELLOW+'$'+Fore.RESET
+COIN = Fore.LIGHTYELLOW_EX+'$'+Fore.RESET
 STAR = Fore.LIGHTGREEN_EX+'w'+Fore.RESET

@@ -6,30 +6,9 @@ from obstacles import *
 from scenery import *
 from headerfile import *
 from alarmexception import *
-from getch import _getChUnix as getChar
+from getch import *
 import signal
 import random
-
-
-def alarmhandler(signum, frame):
-    ''' input method '''
-    raise AlarmException
-
-
-def user_input(timeout=0.15):
-    ''' input method '''
-    signal.signal(signal.SIGALRM, alarmhandler)
-    signal.setitimer(signal.ITIMER_REAL, timeout)
-
-    try:
-        text = getChar()()
-        signal.alarm(0)
-        return text
-    except AlarmException:
-        pass
-    signal.signal(signal.SIGALRM, signal.SIG_IGN)
-    return '.'
-
 
 obj_board = Screen(HEIGHT, MAXWIDTH)
 obj_mando = Mando(0, 0)  # run,fly
@@ -43,45 +22,7 @@ timetrack = time.time()
 starttime = time.time()
 refreshcount = 0
 
-obst = []
-
-for i in range(1):
-    x=random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
-    y=random.randint(SKY+1,HEIGHT-GROUND-1)
-    obj=DiagonalBeam(x,y)
-
-    while(obj.overlap(obj_board.grid)):
-        x=random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
-        y=random.randint(SKY+1,HEIGHT-GROUND-1)
-        # print(x,y)
-        obj=DiagonalBeam(x,y)
-    obj.place(obj_board.grid)
-    obst.append(obj)
-
-    x=random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
-    y=random.randint(SKY+1,HEIGHT-GROUND-1)
-    obj=HorizontalBeam(x,y)
-
-    while(obj.overlap(obj_board.grid)):
-        x=random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
-        y=random.randint(SKY+1,HEIGHT-GROUND-1)
-        # print(x,y)
-        obj=HorizontalBeam(x,y)
-    obj.place(obj_board.grid)
-    obst.append(obj)
-
-    x=random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
-    y=random.randint(SKY+1,HEIGHT-GROUND-1)
-    obj=VerticalBeam(x,y)
-
-    while(obj.overlap(obj_board.grid)):
-        x=random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
-        y=random.randint(SKY+1,HEIGHT-GROUND-1)
-        # print(x,y)
-        obj=VerticalBeam(x,y)
-    obj.place(obj_board.grid)
-    obst.append(obj)
-
+obst = generate_lasers(obj_board.grid)
 
 while True:
 
@@ -91,7 +32,6 @@ while True:
         for ob in obst:
             ob.place(obj_board.grid)
 
-        0
         letter = user_input()
         if letter == 'q':
             quit()
@@ -130,14 +70,21 @@ while True:
                     0, -100, -100, counter, obj_board.grid)
             refreshcount += 1
 
-        
-        for ob in obst:
-            if(ob.check_collision_mando(obj_mando) == 0):
-                print('Lives over!!')
-                quit()
-
         obj_mando.generate_shape()
-        obj_mando.place_mando(obj_board.grid)
+
+        obj_mando.set_airtime()
+
+        for i in range(int(obj_mando.airtime*obj_mando.airtime/2)+1):
+            if i!=0:
+                obj_mando.erase_mando(obj_board.grid)
+            obj_mando.change_y_mando()
+            
+            for ob in obst:
+                if(ob.check_collision_mando(obj_mando) == 0):
+                    print('Lives over!!')
+                    quit()
+                
+            obj_mando.place_mando(obj_board.grid)
 
         timeleft = 150 - (round(time.time()) - round(starttime))
         if timeleft <= 0:

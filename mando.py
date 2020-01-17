@@ -20,6 +20,7 @@ class Mando:
 
         self.coins = 0
         self.lives = 3
+        self.airtime = 0
 
     def get_x(self):
         return self.__x
@@ -32,11 +33,12 @@ class Mando:
         '''
         if self.__fly == 1:
             self.__body[0] = [RED+'\\'+RESET, BLUE+'0'+RESET, RED+'/'+RESET]
-            self.__body[1] = [' ', BLUE+'|'+RESET, ' ']
+            self.__body[1] = [' ', BLUE+Back.BLUE+'|'+RESET, ' ']
 
         else:
             self.__body[0] = [' ', BLUE+'0'+RESET, ' ']
-            self.__body[1] = [RED+'/'+RESET, BLUE+'|'+RESET, RED+'\\'+RESET]
+            self.__body[1] = [RED+'/'+RESET, BLUE +
+                              Back.BLUE+'|'+RESET, RED+'\\'+RESET]
 
         if self.__dirn == 0:
             self.__body[2] = [RED+'/'+RESET, ' ', RED+'\\'+RESET]
@@ -83,19 +85,25 @@ class Mando:
         if fly != -100:
             self.__fly = fly
 
-        # now move him up or down according to the fly flag
-        if fly == 1 and self.__y > SKY+1:
-            self.__y -= 1
+       
+
+    def set_airtime(self):
+        
+        if(self.__fly == 1 or self.__y == HEIGHT-GROUND-2):
+            self.airtime=0
+
+        else:
+            self.airtime+=1
+    
+
+    def change_y_mando(self):
+    # now move him up or down according to the fly flag
+        if self.__fly == 1 and self.__y > SKY+1:
+            self.__y -= 2
             if self.__y < SKY+1:
                 self.__y = SKY+1
 
-        elif (fly == 0) and self.__y < HEIGHT-GROUND-2:
+        elif (self.__fly == 0) and self.__y < HEIGHT-GROUND-2:
             self.__y += 1
             if self.__y > HEIGHT-GROUND-2:
                 self.__y = HEIGHT-GROUND-2
-
-        m = grid[self.__y-1:self.__y+2, self.__x-1:self.__x+2]
-        if np.count_nonzero(m == STAR) > 0:
-            return 1
-
-        return 0

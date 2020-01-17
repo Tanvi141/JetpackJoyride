@@ -1,4 +1,6 @@
 '''module to take input'''
+import signal
+from alarmexception import *
 
 class _getChUnix:
     '''class to take input'''
@@ -21,3 +23,24 @@ class _getChUnix:
         finally:
             termios.tcsetattr(fedvar, termios.TCSADRAIN, old_settings)
         return charvar
+
+
+
+def alarmhandler(signum, frame):
+    ''' input method '''
+    raise AlarmException
+
+
+def user_input(timeout=0.15):
+    ''' input method '''
+    signal.signal(signal.SIGALRM, alarmhandler)
+    signal.setitimer(signal.ITIMER_REAL, timeout)
+
+    try:
+        text = _getChUnix()()
+        signal.alarm(0)
+        return text
+    except AlarmException:
+        pass
+    signal.signal(signal.SIGALRM, signal.SIG_IGN)
+    return '.'

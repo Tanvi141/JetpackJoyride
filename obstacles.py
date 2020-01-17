@@ -1,6 +1,7 @@
 from headerfile import *
 import numpy as np
 from mando import *
+import random
 
 
 class Obstacles:
@@ -33,21 +34,21 @@ class Obstacles:
         x = obj_mando.get_x()
         y = obj_mando.get_y()
 
-
-        if x+1 >= self._x and x-1 <= self._x + self._xrange and y+1 >= self._y and y-1 <= self._y+self._yrange:
+        # sdf,df,legs,head
+        if x+1 >= self._x and x-1 < self._x + self._xrange and y+1 >= self._y and y-1 < self._y+self._yrange:
             # then mando is being hit by laser
             if self.__killflag == 0:
                 # so he has just come into contact with the laser
-                obj_mando.lives-=1
+                obj_mando.lives -= 1
             else:
                 # he keeps moving through the same
                 pass
             self.__killflag = 1
 
         else:
-            #he is not in contact with the laser
+            # he is not in contact with the laser
             self.__killflag = 0
-        
+
         return obj_mando.lives
 
 
@@ -92,6 +93,50 @@ class DiagonalBeam(Obstacles):
         for i in range(self._yrange):
             grid[self._y+i][self._x+2*i] = STAR
             grid[self._y+i][self._x+2*i+1] = STAR
+
+
+def generate_lasers(grid):
+
+    obst = []
+
+    for i in range(1):
+        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+        y = random.randint(SKY+1, HEIGHT-GROUND-1)
+        obj = DiagonalBeam(x, y)
+
+        while(obj.overlap(grid)):
+            x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+            y = random.randint(SKY+1, HEIGHT-GROUND-1)
+            # print(x,y)
+            obj = DiagonalBeam(x, y)
+        obj.place(grid)
+        obst.append(obj)
+
+        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+        y = random.randint(SKY+1, HEIGHT-GROUND-1)
+        obj = HorizontalBeam(x, y)
+
+        while(obj.overlap(grid)):
+            x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+            y = random.randint(SKY+1, HEIGHT-GROUND-1)
+            # print(x,y)
+            obj = HorizontalBeam(x, y)
+        obj.place(grid)
+        obst.append(obj)
+
+        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+        y = random.randint(SKY+1, HEIGHT-GROUND-1)
+        obj = VerticalBeam(x, y)
+
+        while(obj.overlap(grid)):
+            x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+            y = random.randint(SKY+1, HEIGHT-GROUND-1)
+            # print(x,y)
+            obj = VerticalBeam(x, y)
+        obj.place(grid)
+        obst.append(obj)
+
+    return obst
 
     # **
     #   **
