@@ -1,14 +1,16 @@
 import os
 import time
+import signal
+import random
+
 from board import *
 from mando import *
 from obstacles import *
 from scenery import *
+from powerups import *  
 from headerfile import *
 from alarmexception import *
 from getch import *
-import signal
-import random
 
 obj_board = Screen(HEIGHT, MAXWIDTH)
 obj_mando = Mando(0, 0)  # run,fly
@@ -23,11 +25,19 @@ starttime = time.time()
 refreshcount = 0
 
 obst = generate_lasers(obj_board.grid)
+counterinc=1
+
+obj_shield=Shield(10,10)
+obj_speedboost=SpeedBoost(10,10)
 
 while True:
 
     if time.time() - timetrack >= 0.15:
         timetrack = time.time()
+
+        counterinc=obj_speedboost.update()
+        obj_shield.update()
+
         obj_mando.erase_mando(obj_board.grid)
         for ob in obst:
             ob.place(obj_board.grid)
@@ -37,17 +47,17 @@ while True:
             quit()
         elif letter == 'd':
             # set 3rd arg as -100 if want to keep in air on d
-            obj_mando.set_values(5, 1, 0, counter, obj_board.grid)
+            obj_mando.set_values(counterinc+5, 1, 0, counter, obj_board.grid)
             refreshcount = 0
         elif letter == 'a':
             # set 3rd arg as -100 if want to keep in aiif counter < MAXWIDTH-WIDTH on w
-            obj_mando.set_values(-3, -1, 0, counter, obj_board.grid)
+            obj_mando.set_values(counterinc-4, -1, 0, counter, obj_board.grid)
             refreshcount = 0
         elif letter == 'w':
             # unsure if second arg should be 0 or -100
             if counter < MAXWIDTH-WIDTH:
                 obj_mando.set_values(
-                    1, 0, 1, counter, obj_board.grid)
+                    counterinc, 0, 1, counter, obj_board.grid)
             else:
                 obj_mando.set_values(
                     0, 0, 1, counter, obj_board.grid)
@@ -55,20 +65,22 @@ while True:
         elif refreshcount == 2:
             if counter < MAXWIDTH-WIDTH:
                 obj_mando.set_values(
-                    1, 0, 0, counter, obj_board.grid)
+                    counterinc, 0, 0, counter, obj_board.grid)
             else:
                 obj_mando.set_values(
                     0, 0, 0, counter, obj_board.grid)
             refreshcount = 0
         else:
-            # obj_mando.set_values(1,0,0)
             if counter < MAXWIDTH-WIDTH:
                 obj_mando.set_values(
-                    1, -100, -100, counter, obj_board.grid)
+                    counterinc, -100, -100, counter, obj_board.grid)
             else:
                 obj_mando.set_values(
                     0, -100, -100, counter, obj_board.grid)
             refreshcount += 1
+
+        if letter=='l':
+            obj_speedboost.activate()
 
         obj_mando.generate_shape()
 
@@ -78,7 +90,7 @@ while True:
             if i!=0:
                 obj_mando.erase_mando(obj_board.grid)
             obj_mando.change_y_mando()
-            
+
             for ob in obst:
                 if(ob.check_collision_mando(obj_mando) == 0):
                     print('Lives over!!')
@@ -94,13 +106,14 @@ while True:
         os.system('clear')
         print("Time:", 150 -
               (round(time.time()) - round(starttime)), end='\t\t\t')
-        print("Lives:", obj_mando.lives)
+        print("Lives:", obj_mando.lives, end='\t\t\t')
+        print("SpeedUp: " + obj_speedboost.status())
         print(Fore.YELLOW + "$$:" + Fore.RESET, obj_mando.coins)
         obj_board.show_board(counter)
         # obj_board.show_all()
 
         if counter < MAXWIDTH-WIDTH:
-            counter += 1
+            counter += counterinc
 
 
 #   0 |

@@ -22,6 +22,8 @@ class Screen:
     def show_board(self, a):
         '''Shows grid from a of WIDTH width
         '''
+        if a+WIDTH>MAXWIDTH:
+            a=MAXWIDTH-WIDTH
         for i in range(self.__rows):
                 for j in range(a, a+WIDTH):  # WIDTH columns at a time
                     print(self.grid[i][j], end='')
