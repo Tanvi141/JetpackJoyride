@@ -32,38 +32,64 @@ class Mando:
     def generate_shape(self):
         '''Gives Mando's body appropriate shape according to dirn and type of movement
         '''
-        if self.__fly == 1:
-            self.__body[0] = [RED+'\\'+RESET, BLUE+'0'+RESET, RED+'/'+RESET]
-            self.__body[1] = [' ', BLUE+Back.BLUE+'|'+RESET, ' ']
+        if self.shield==0:
+            if self.__fly == 1:
+                self.__body[0] = [RED+'\\'+RESET, BLUE+'0'+RESET, RED+'/'+RESET]
+                self.__body[1] = [' ', BLUE+Back.BLUE+'|'+RESET, ' ']
 
+            else:
+                self.__body[0] = [' ', BLUE+'0'+RESET, ' ']
+                self.__body[1] = [RED+'/'+RESET, BLUE +
+                                Back.BLUE+'|'+RESET, RED+'\\'+RESET]
+
+            if self.__dirn == 0:
+                self.__body[2] = [RED+'/'+RESET, ' ', RED+'\\'+RESET]
+
+            elif self.__dirn == -1:
+                self.__body[2] = [RED+'<'+RESET, ' ', RED+'\\'+RESET]
+
+            else:
+                self.__body[2] = [RED+'/'+RESET, ' ', RED+'>'+RESET]
+        
         else:
-            self.__body[0] = [' ', BLUE+'0'+RESET, ' ']
-            self.__body[1] = [RED+'/'+RESET, BLUE +
-                              Back.BLUE+'|'+RESET, RED+'\\'+RESET]
+            if self.__fly == 1:
+                self.__body[0] = [Fore.CYAN+'\\'+RESET, Fore.CYAN+'0'+RESET, Fore.CYAN+'/'+RESET]
+                self.__body[1] = [' ', Fore.CYAN+Back.CYAN+'|'+RESET, ' ']
 
-        if self.__dirn == 0:
-            self.__body[2] = [RED+'/'+RESET, ' ', RED+'\\'+RESET]
+            else:
+                self.__body[0] = [' ', Fore.CYAN+'0'+RESET, ' ']
+                self.__body[1] = [Fore.CYAN+'/'+RESET,Fore.CYAN +
+                                Back.CYAN+'|'+RESET, Fore.CYAN+'\\'+RESET]
 
-        elif self.__dirn == -1:
-            self.__body[2] = [RED+'<'+RESET, ' ', RED+'\\'+RESET]
+            if self.__dirn == 0:
+                self.__body[2] = [Fore.CYAN+'/'+RESET, ' ', Fore.CYAN+'\\'+RESET]
 
-        else:
-            self.__body[2] = [RED+'/'+RESET, ' ', RED+'>'+RESET]
+            elif self.__dirn == -1:
+                self.__body[2] = [Fore.CYAN+'<'+RESET, ' ', Fore.CYAN+'\\'+RESET]
 
-    def place_mando(self, grid):
+            else:
+                self.__body[2] = [Fore.CYAN+'/'+RESET, ' ', Fore.CYAN+'>'+RESET]
+
+    def place_mando(self, grid,counter):
         '''Places the mando at appropriate position with torso at x,y and counts the coinss
         '''
         x = self.__x
         y = self.__y
-        m = grid[y-1:y+2, x-1:x+2]
+        m = grid[y-1:y+2, x-1-counter-1:x+2]
         self.coins += np.count_nonzero(m == COIN)
         grid[y-1:y+2, x-1:x+2] = self.__body
 
-    def erase_mando(self, grid):
+    def erase_mando(self, grid,counter):
         '''Erases mando off the board, reduces lives
         '''
         x = self.__x
         y = self.__y
+        # m = grid[y-1:y+2, x-1-counter:x+2]
+        for i in range(y-1,y+2):
+            for j in range(x-counter-2,x+2):
+                if grid[i][j]==COIN:
+                    self.coins+=1
+                    grid[i][j]=' '
         grid[y-1:y+2, x-1:x+2] = self.__empty
 
     def set_values(self, x, dirn, fly, counter, grid):

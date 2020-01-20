@@ -14,9 +14,9 @@ class Screen:
         self.grid = np.zeros((HEIGHT, MAXWIDTH), dtype='<U20')
         self.grid[:] = ' '
 
-        for i in range(self.__columns):
-            if(i%5==0):
-                self.grid[8,i]=COIN
+        # for i in range(self.__columns):
+        #     if(i%5==0):
+        #         self.grid[8,i]=COIN
 
                 
     def show_board(self, a):
@@ -28,9 +28,3 @@ class Screen:
                 for j in range(a, a+WIDTH):  # WIDTH columns at a time
                     print(self.grid[i][j], end='')
                 print()
-
-    def get_x(self):
-        return self.__x
-
-    def get_y(self):
-        return self.__y

@@ -54,14 +54,14 @@ class Obstacles:
 
         return obj_mando.lives
 
-    def check_collision_bullets(self, obj_bullet,grid):
+    def check_collision_bullets(self, obj_bullet,grid,counterinc):
         if obj_bullet.killed() or self._killed == 1:
             return
 
         x = obj_bullet.get_x()
         y = obj_bullet.get_y()
 
-        if x+5 >= self._x and x-1 < self._x + self._xrange and y >= self._y and y < self._y+self._yrange:
+        if x+4+counterinc >= self._x and x-1 < self._x + self._xrange and y >= self._y and y < self._y+self._yrange:
             obj_bullet.kill(grid)
             self._killed = 1
 
@@ -122,12 +122,24 @@ class DiagonalBeam(Obstacles):
                 grid[self._y+i][self._x+2*i] = STAR
                 grid[self._y+i][self._x+2*i+1] = STAR
 
+class CoinBeam(Obstacles):
+    
+    def __init__(self,x,y,xrange,yrange):
+        super().__init__(1)
+        self._x=x
+        self._y=y
+        self._xrange=xrange
+        self._yrange=yrange
+        
+    def place(self, grid):
+        grid[self._y:self._y+self._yrange, self._x:self._x +
+                 self._xrange] = np.tile([COIN], (self._yrange, self._xrange))
 
 def generate_lasers(grid):
 
     obst = []
 
-    for i in range(10):
+    for i in range(5):
         x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
         y = random.randint(SKY+1, HEIGHT-GROUND-1)
         obj = DiagonalBeam(x, y)
@@ -167,29 +179,14 @@ def generate_lasers(grid):
     obst.sort(key=lambda obj: obj._x, reverse=False)
     return obst
 
-    # **
-    #   **
-    #     **
-    #       **
-    #         **
-    #           **
-    #             **
-    #               **
-    # 8x16
+def generate_coins(grid):
 
-    # **
-    # **
-    # **
-    # **
-    # **
-    # **
-    # 6x2
+    for i in range(20):
+        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+        y = random.randint(SKY+1, HEIGHT-GROUND-4)
+        obj = CoinBeam(x,y,16,3)
 
-    # ***********
-    # ***********
-    # 2x11
-
-    # mmmm
-    # mmmm
-    # mmmm
-    # 3x4
+        # while(obj.overlap(grid)):
+        #     x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+        #     y = random.randint(SKY+1, HEIGHT-GROUND-1)
+        obj.place(grid)

@@ -10,14 +10,16 @@ class Bullets():
         self.__x=obj_mando.get_x()+2
         self.__y=obj_mando.get_y()
         self.__killed=0
+        self.__old1=' '
+        self.__old2=' '
 
     def killed(self):
         return self.__killed
 
     def kill(self,grid):
         self.__killed=1
-        grid[self.__y][self.__x]=" "
-        grid[self.__y][self.__x-1]=" "
+        grid[self.__y][self.__x]=self.__old1
+        grid[self.__y][self.__x-1]=self.__old2
 
     def place_bullet(self,grid,counter):
         '''Places bullet on the board then moves it forward
@@ -26,14 +28,16 @@ class Bullets():
             self.__killed=1
 
         if self.__killed==0:
+            self.__old1=grid[self.__y][self.__x]
+            self.__old2=grid[self.__y][self.__x-1]
             grid[self.__y][self.__x]=">"
             grid[self.__y][self.__x-1]="="
 
-    def move_bullet(self,grid):
+    def move_bullet(self,grid,counterinc):
         if self.__killed==0:
-            grid[self.__y][self.__x]=" "
-            grid[self.__y][self.__x-1]=" "
-            self.__x+=5
+            grid[self.__y][self.__x]=self.__old1
+            grid[self.__y][self.__x-1]=self.__old2
+            self.__x+=4+counterinc
     
     def get_x(self):
         return self.__x

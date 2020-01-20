@@ -3,7 +3,7 @@ init()
 
 DEBUG = 'a'
 # sizes
-HEIGHT = 30
+HEIGHT = 40
 MAXWIDTH = 800
 WIDTH = 120
 PLACEWIDTH = 40

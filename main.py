@@ -26,6 +26,7 @@ timetrack = time.time()
 starttime = time.time()
 refreshcount = 0
 
+generate_coins(obj_board.grid)
 obst = generate_lasers(obj_board.grid)
 counterinc=1
 bullets=[]
@@ -38,10 +39,10 @@ while True:
     if time.time() - timetrack >= 0.15:
         timetrack = time.time()
 
-        counterinc=obj_speedboost.update()
+        counterinc=obj_speedboost.update(obj_mando)
         obj_shield.update(obj_mando)
 
-        obj_mando.erase_mando(obj_board.grid)
+        obj_mando.erase_mando(obj_board.grid,counterinc)
         for ob in obst:
             ob.place(obj_board.grid)
 
@@ -59,7 +60,7 @@ while True:
         elif letter == 'w':
             # unsure if second arg should be 0 or -100
             if counter < MAXWIDTH-WIDTH:
-                obj_mando.set_values(
+                obj_mando.set_values(   
                     counterinc, 0, 1, counter, obj_board.grid)
             else:
                 obj_mando.set_values(
@@ -93,16 +94,16 @@ while True:
 
         for bulls in bullets:
             for beams in obst:
-                beams.check_collision_bullets(bulls,obj_board.grid)
+                beams.check_collision_bullets(bulls,obj_board.grid,counterinc)
 
         for bulls in bullets:
-            bulls.move_bullet(obj_board.grid)
+            bulls.move_bullet(obj_board.grid,counterinc)
             bulls.place_bullet(obj_board.grid,counter)
 
         obj_mando.set_airtime()
         for i in range(int(obj_mando.airtime*obj_mando.airtime/2)+1):
             if i!=0:
-                obj_mando.erase_mando(obj_board.grid)
+                obj_mando.erase_mando(obj_board.grid,counterinc)
             obj_mando.change_y_mando()
 
             for ob in obst:
@@ -110,7 +111,7 @@ while True:
                     print('Lives over!!')
                     quit()
                 
-            obj_mando.place_mando(obj_board.grid)
+            obj_mando.place_mando(obj_board.grid,counterinc)
 
         timeleft = 150 - (round(time.time()) - round(starttime))
         if timeleft <= 0:
