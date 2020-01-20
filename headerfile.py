@@ -4,7 +4,7 @@ init()
 DEBUG = 'a'
 # sizes
 HEIGHT = 30
-MAXWIDTH = 200
+MAXWIDTH = 800
 WIDTH = 120
 PLACEWIDTH = 40
 SKY = 3

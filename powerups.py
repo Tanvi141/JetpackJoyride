@@ -13,7 +13,7 @@ class PowerUp():
         self._recharge_track = 0
         self._active_track = 0
 
-    def activate(self):
+    def activate(self):#change color on shield activation
         '''Activates only if it is charged and not active'''
         if self._charged == 1 and self._activated == 0:
             self._activated = 1
@@ -49,13 +49,17 @@ class SpeedBoost(PowerUp):
 
 class Shield(PowerUp):
 
-    def update(self):
+    def update(self,obj_mando):
         if self._activated == 1:
             if(time.time()-self._active_track > self._active_time):
                 self._activated = 0
                 self._recharge_track = time.time()
+            obj_mando.shield=1
 
-        elif self._charged == 0:
-            if (time.time()-self._recharge_track > self._recharge_time):
-                self._charged = 1
+        else:
+            obj_mando.shield=0
+            if self._charged == 0:
+                if (time.time()-self._recharge_track > self._recharge_time):
+                    self._charged = 1
+        
         

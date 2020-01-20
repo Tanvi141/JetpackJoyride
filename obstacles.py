@@ -31,6 +31,9 @@ class Obstacles:
     def check_collision_mando(self, obj_mando):
         '''returns 1 if mando has collided with this object
         '''
+        if obj_mando.shield == 1 or self._killed == 1:
+            return obj_mando.lives
+
         x = obj_mando.get_x()
         y = obj_mando.get_y()
 
@@ -51,6 +54,17 @@ class Obstacles:
 
         return obj_mando.lives
 
+    def check_collision_bullets(self, obj_bullet,grid):
+        if obj_bullet.killed() or self._killed == 1:
+            return
+
+        x = obj_bullet.get_x()
+        y = obj_bullet.get_y()
+
+        if x+5 >= self._x and x-1 < self._x + self._xrange and y >= self._y and y < self._y+self._yrange:
+            obj_bullet.kill(grid)
+            self._killed = 1
+
 
 class HorizontalBeam(Obstacles):
 
@@ -62,8 +76,12 @@ class HorizontalBeam(Obstacles):
         self._yrange = 2
 
     def place(self, grid):
-        grid[self._y:self._y+self._yrange, self._x:self._x +
-             self._xrange] = np.tile([STAR], (self._yrange, self._xrange))
+        if(self._killed) == 1:
+            grid[self._y:self._y+self._yrange, self._x:self._x +
+                 self._xrange] = np.tile([' '], (self._yrange, self._xrange))
+        else:
+            grid[self._y:self._y+self._yrange, self._x:self._x +
+                 self._xrange] = np.tile([STAR], (self._yrange, self._xrange))
 
 
 class VerticalBeam(Obstacles):
@@ -76,8 +94,13 @@ class VerticalBeam(Obstacles):
         self._yrange = 12
 
     def place(self, grid):
-        grid[self._y:self._y+self._yrange, self._x:self._x +
-             self._xrange] = np.tile([STAR, STAR], (self._yrange, (int)(self._xrange/2)))
+        if(self._killed) == 1:
+            grid[self._y:self._y+self._yrange, self._x:self._x +
+                 self._xrange] = np.tile([' ', ' '], (self._yrange, (int)(self._xrange/2)))
+
+        else:
+            grid[self._y:self._y+self._yrange, self._x:self._x +
+                 self._xrange] = np.tile([STAR, STAR], (self._yrange, (int)(self._xrange/2)))
 
 
 class DiagonalBeam(Obstacles):
@@ -90,16 +113,21 @@ class DiagonalBeam(Obstacles):
         self._xrange = self._yrange*2
 
     def place(self, grid):
-        for i in range(self._yrange):
-            grid[self._y+i][self._x+2*i] = STAR
-            grid[self._y+i][self._x+2*i+1] = STAR
+        if(self._killed) == 1:
+            for i in range(self._yrange):
+                grid[self._y+i][self._x+2*i] = ' '
+                grid[self._y+i][self._x+2*i+1] = ' '
+        else:
+            for i in range(self._yrange):
+                grid[self._y+i][self._x+2*i] = STAR
+                grid[self._y+i][self._x+2*i+1] = STAR
 
 
 def generate_lasers(grid):
 
     obst = []
 
-    for i in range(1):
+    for i in range(10):
         x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
         y = random.randint(SKY+1, HEIGHT-GROUND-1)
         obj = DiagonalBeam(x, y)
@@ -136,6 +164,7 @@ def generate_lasers(grid):
         obj.place(grid)
         obst.append(obj)
 
+    obst.sort(key=lambda obj: obj._x, reverse=False)
     return obst
 
     # **

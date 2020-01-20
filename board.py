@@ -29,3 +29,8 @@ class Screen:
                     print(self.grid[i][j], end='')
                 print()
 
+    def get_x(self):
+        return self.__x
+
+    def get_y(self):
+        return self.__y

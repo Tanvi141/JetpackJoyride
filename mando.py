@@ -21,6 +21,7 @@ class Mando:
         self.coins = 0
         self.lives = 3
         self.airtime = 0
+        self.shield = 0
 
     def get_x(self):
         return self.__x
@@ -85,19 +86,16 @@ class Mando:
         if fly != -100:
             self.__fly = fly
 
-       
-
     def set_airtime(self):
-        
+
         if(self.__fly == 1 or self.__y == HEIGHT-GROUND-2):
-            self.airtime=0
+            self.airtime = 0
 
         else:
-            self.airtime+=1
-    
+            self.airtime += 1
 
     def change_y_mando(self):
-    # now move him up or down according to the fly flag
+        # now move him up or down according to the fly flag
         if self.__fly == 1 and self.__y > SKY+1:
             self.__y -= 2
             if self.__y < SKY+1:
