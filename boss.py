@@ -5,8 +5,8 @@ import random
 
 class Boss(Obstacles):
 
-    def __init__(self):
-        super().__init__(10)
+    def __init__(self,lives):
+        super().__init__(lives)
         a = np.zeros((8, 50), dtype='<U20')
         a[:] = ' '
         y = 0
@@ -85,12 +85,12 @@ class IceBalls():
         grid[y-1:y+2, x-1:x+2][:] = ' '
 
     def check_collision_mando(self, obj_mando):
-        if obj_mando.shield==1 or self.__killed==1:
+        if obj_mando.get_shield()==1 or self.__killed==1:
             return
         x = obj_mando.get_x()
         y = obj_mando.get_y()
 
         if(x+1 >= self.__x and x-1 <= self.__x+2 and y+1 >= self.__y-1 and y-1 <= self.__y+1):
-            obj_mando.lives-=1
+            obj_mando.kill_mando()
 
         

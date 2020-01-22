@@ -22,13 +22,13 @@ class PowerUp():
 
     def status(self):
         if (self._activated == 1):
-            return "Active"
+            return "Active " + str(self._active_time-round(time.time() - self._active_track))+"    "
 
         elif (self._charged == 0):
-            return "Charging " + str(self._recharge_time-round(time.time() - self._recharge_track))
+            return "Charging " + str(self._recharge_time-round(time.time() - self._recharge_track))+"    "
 
         else:
-            return "Charged"
+            return "Charged   "
 
 
 class SpeedBoost(PowerUp):
@@ -56,10 +56,10 @@ class Shield(PowerUp):
             if(time.time()-self._active_track > self._active_time):
                 self._activated = 0
                 self._recharge_track = time.time()
-            obj_mando.shield = 1
+            obj_mando.set_shield(1)
 
         else:
-            obj_mando.shield = 0
+            obj_mando.set_shield(0)
             if self._charged == 0:
                 if (time.time()-self._recharge_track > self._recharge_time):
                     self._charged = 1

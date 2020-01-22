@@ -26,5 +26,6 @@ class Screen:
             a=MAXWIDTH-WIDTH
         for i in range(self.__rows):
                 for j in range(a, a+WIDTH):  # WIDTH columns at a time
-                    print(self.grid[i][j], end='')
+                    # print(Back.CYAN+self.grid[i][j]+Back.RESET, end='')
+                    print("\033[1m" + self.grid[i][j], end='')
                 print()

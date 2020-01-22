@@ -20,10 +20,12 @@ class Mando:
         self.__oldx=0
         self.__oldy=0
 
-        self.coins = 0
-        self.lives = 3
-        self.airtime = 0
-        self.shield = 0
+        self.__coins = 0
+        self.__lives = 3
+        self.__airtime = 0
+        self.__shield = 0
+
+        self.__score=0
 
     def get_x(self):
         return self.__x
@@ -31,23 +33,46 @@ class Mando:
     def get_y(self):
         return self.__y
 
+    def get_coins(self):
+        return self.__coins
+    
+    def change_score(self,val):
+        self.__score+=val
+
+    def get_score(self):
+        return self.__score
+    
+    def get_lives(self):
+        return self.__lives
+    
+    def kill_mando(self):
+        self.__lives-=1
+
     def update_old(self):
         self.__oldx=self.__x
         self.__oldy=self.__y
 
+    def get_shield(self):
+        return self.__shield
+    
+    def set_shield(self,val):
+        self.__shield=val
 
+    def get_airtime(self):
+        return self.__airtime
+    
     def generate_shape(self):
         '''Gives Mando's body appropriate shape according to dirn and type of movement
         '''
-        if self.shield==0:
+        if self.__shield==0:
             if self.__fly == 1:
                 self.__body[0] = [RED+'\\'+RESET, BLUE+'0'+RESET, RED+'/'+RESET]
-                self.__body[1] = [' ', BLUE+Back.BLUE+'|'+RESET, ' ']
+                self.__body[1] = [' ', BLUE+Back.RED+' '+RESET, ' ']
 
             else:
                 self.__body[0] = [' ', BLUE+'0'+RESET, ' ']
                 self.__body[1] = [RED+'/'+RESET, BLUE +
-                                Back.BLUE+'|'+RESET, RED+'\\'+RESET]
+                                Back.RED+' '+RESET, RED+'\\'+RESET]
 
             if self.__dirn == 0:
                 self.__body[2] = [RED+'/'+RESET, ' ', RED+'\\'+RESET]
@@ -60,33 +85,28 @@ class Mando:
         
         else:
             if self.__fly == 1:
-                self.__body[0] = [Fore.LIGHTMAGENTA_EX+'\\'+RESET, Fore.LIGHTMAGENTA_EX+'0'+RESET, Fore.LIGHTMAGENTA_EX+'/'+RESET]
-                self.__body[1] = [' ', Fore.LIGHTMAGENTA_EX+Back.LIGHTMAGENTA_EX+'|'+RESET, ' ']
+                self.__body[0] = [Fore.WHITE+'\\'+RESET, Fore.WHITE+'0'+RESET, Fore.WHITE+'/'+RESET]
+                self.__body[1] = [' ', Fore.WHITE+Back.BLACK+' '+RESET, ' ']
 
             else:
-                self.__body[0] = [' ', Fore.LIGHTMAGENTA_EX+'0'+RESET, ' ']
-                self.__body[1] = [Fore.LIGHTMAGENTA_EX+'/'+RESET,Fore.LIGHTMAGENTA_EX +
-                                Back.LIGHTMAGENTA_EX+'|'+RESET, Fore.LIGHTMAGENTA_EX+'\\'+RESET]
+                self.__body[0] = [' ', Fore.WHITE+'0'+RESET, ' ']
+                self.__body[1] = [Fore.WHITE+'/'+RESET,Fore.WHITE +
+                                Back.BLACK+' '+RESET, Fore.WHITE+'\\'+RESET]
 
             if self.__dirn == 0:
-                self.__body[2] = [Fore.LIGHTMAGENTA_EX+'/'+RESET, ' ', Fore.LIGHTMAGENTA_EX+'\\'+RESET]
+                self.__body[2] = [Fore.WHITE+'/'+RESET, ' ', Fore.WHITE+'\\'+RESET]
 
             elif self.__dirn == -1:
-                self.__body[2] = [Fore.LIGHTMAGENTA_EX+'<'+RESET, ' ', Fore.LIGHTMAGENTA_EX+'\\'+RESET]
+                self.__body[2] = [Fore.WHITE+'<'+RESET, ' ', Fore.WHITE+'\\'+RESET]
 
             else:
-                self.__body[2] = [Fore.LIGHTMAGENTA_EX+'/'+RESET, ' ', Fore.LIGHTMAGENTA_EX+'>'+RESET]
+                self.__body[2] = [Fore.WHITE+'/'+RESET, ' ', Fore.WHITE+'>'+RESET]
 
     def place_mando(self, grid,counterinc):
         '''Places the mando at appropriate position with torso at x,y and counts the coinss
         '''
         x = self.__x
         y = self.__y
-        # if self.__fly==1:
-        #     m = grid[y-1:y+2, x-1:x+2]
-        # else:
-        #     m = grid[y-1:y+2, x-1-counterinc+1:x+2]
-        # self.coins += np.count_nonzero(m == COIN)
         grid[y-1:y+2, x-1:x+2] = self.__body
 
     def erase_mando(self, grid,counter):
@@ -117,12 +137,13 @@ class Mando:
             self.__fly = fly
 
     def set_airtime(self):
-
+        ''' Time to calculate gravity drop
+        '''
         if(self.__fly == 1 or self.__y == HEIGHT-GROUND-2):
-            self.airtime = 0
+            self.__airtime = 0
 
         else:
-            self.airtime += 1
+            self.__airtime += 1
 
     def change_y_mando(self):
         # now move him up or down according to the fly flag
@@ -150,32 +171,10 @@ class Mando:
         # print(x_min, x_max,x_coin, y_min, y_max,y_coin)
 
         if(x_coin<=x_max and x_coin>=x_min and y_coin<=y_max and y_coin>=y_min):
-            self.coins+=1
+            self.__coins+=1
             obj_coin.erase_coin(grid)
-        
-        # while(y_min<=y_max or x_min<=x_max):
-
-        #     if(y_min<=y_max):
-        #         if(self.__oldy<self.__y):
-        #             y=y_min
-        #             y_min+=1
-        #         else:
-        #             y=y_max
-        #             y_max-=1
+            self.change_score(10)
             
-        #     if(x_min<=x_max):
-        #         if(self.__oldx<self.__x):
-        #             x=x_min
-        #             x_min+=1
-        #         else:
-        #             x=x_max
-        #             x_max-=1
-            
-
-        #     if(x_coin>=x-1 and x_coin<=x+1 and y_coin>=y-1 and y_coin<=y+1):
-        #         self.coins+=1
-        #         obj_coin.erase_coin(grid)
-      
         return 
 
 

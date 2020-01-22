@@ -30,8 +30,8 @@ class Bullets():
         if self.__killed==0:
             self.__old1=grid[self.__y][self.__x]
             self.__old2=grid[self.__y][self.__x-1]
-            grid[self.__y][self.__x]=">"
-            grid[self.__y][self.__x-1]="="
+            grid[self.__y][self.__x]=Fore.WHITE+">"+Fore.RESET
+            grid[self.__y][self.__x-1]=Fore.WHITE+ "="+ Fore.RESET
             if counter >= MAXWIDTH-WIDTH-5:
                 self.__old1=' '
                 self.__old2=' '
@@ -42,10 +42,10 @@ class Bullets():
             grid[self.__y][self.__x]=self.__old1
             grid[self.__y][self.__x-1]=self.__old2
             
-            if grid[self.__y][self.__x]=='>' or grid[self.__y][self.__x]=='=':
+            if grid[self.__y][self.__x]==Fore.WHITE+">"+Fore.RESET or grid[self.__y][self.__x]==Fore.WHITE+ "="+ Fore.RESET:
                 grid[self.__y][self.__x]=' '
 
-            if grid[self.__y][self.__x-1]=='>' or grid[self.__y][self.__x-1]=='=':
+            if grid[self.__y][self.__x-1]==Fore.WHITE+">"+Fore.RESET or grid[self.__y][self.__x-1]==Fore.WHITE+ "="+ Fore.RESET:
                 grid[self.__y][self.__x-1]=' '
             
             self.__x+=4+counterinc

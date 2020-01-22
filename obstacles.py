@@ -31,7 +31,7 @@ class Obstacles:
     def check_collision_mando(self, obj_mando,counter):
         '''returns 1 if mando has collided with this object
         '''
-        if obj_mando.shield == 1 or self._killed == 1:
+        if obj_mando.get_shield() == 1 or self._killed == 1:
             return 
 
         x = obj_mando.get_x()
@@ -42,7 +42,8 @@ class Obstacles:
             # then mando is being hit by laser
             if self.__killflag == 0:
                 # so he has just come into contact with the laser
-                obj_mando.lives -= 1
+                obj_mando.kill_mando()
+                obj_mando.change_score(-50)
             else:
                 # he keeps moving through the same
                 pass
@@ -54,7 +55,7 @@ class Obstacles:
 
         return 
 
-    def check_collision_bullets(self, obj_bullet,grid,counterinc):
+    def check_collision_bullets(self, obj_bullet,grid,counterinc,obj_mando):
         if obj_bullet.killed() or self._killed == 1:
             return
 
@@ -64,6 +65,7 @@ class Obstacles:
         if x+4+counterinc >= self._x and x-1 < self._x + self._xrange and y >= self._y and y < self._y+self._yrange:
             obj_bullet.kill(grid)
             self._lives -= 1
+            obj_mando.change_score(50)
         
         if self._lives==0:
             self._killed=1
@@ -147,7 +149,7 @@ class Magnet(Obstacles):
     
     def check_collision_mando(self, obj_mando,counter):
 
-        if obj_mando.shield == 1 or self._killed == 1:
+        if obj_mando.get_shield() == 1 or self._killed == 1:
             return 
 
         x = obj_mando.get_x()
