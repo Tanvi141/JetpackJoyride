@@ -14,8 +14,9 @@ from powerups import *
 from bullets import *
 from boss import *
 
-def showmessage(msg,obj_mando):
+def showmessage(msg,obj_mando): 
     # os.system("clear")
+    os.system("killall aplay -q")
     print("\n\n")
     if msg == "Time Up!!":
         print("\t\t\t _______  ___   __   __  _______    __   __  _______\n" +
@@ -25,6 +26,8 @@ def showmessage(msg,obj_mando):
               "\t\t\t  |   |  |   | |       ||    ___|  |       ||    ___|\n" +
               "\t\t\t  |   |  |   | | ||_|| ||   |___   |       ||   |\n" +
               "\t\t\t  |___|  |___| |_|   |_||_______|  |_______||___|\n")
+
+        os.system("aplay funstuff/gameover.wav -q &")
     
     elif msg =="You won!!":
         print( "\t\t\t __   __  ___   _______  _______  _______  ______    __   __\n" +   
@@ -34,6 +37,9 @@ def showmessage(msg,obj_mando):
                "\t\t\t|       ||   | |     |    |   |  |  |_|  ||    __  ||_     _|\n" +  
                "\t\t\t |     | |   | |     |_   |   |  |       ||   |  | |  |   |\n" +    
                "\t\t\t  |___|  |___| |_______|  |___|  |_______||___|  |_|  |___|\n" )
+
+        os.system("aplay funstuff/captureflag.wav -q &")
+        
     
     elif msg=="Lives over!!":
         print("\t\t\t _______  _______  __   __  _______    _______  __   __  _______  ______\n" +  
@@ -43,6 +49,7 @@ def showmessage(msg,obj_mando):
               "\t\t\t|   ||  ||       ||       ||    ___|  |  |_|  ||       ||    ___||    __  |\n"+
               "\t\t\t|   |_| ||   _   || ||_|| ||   |___   |       | |     | |   |___ |   |  | |\n"+
               "\t\t\t|_______||__| |__||_|   |_||_______|  |_______|  |___|  |_______||___|  |_|\n")
+        os.system("aplay funstuff/gameover.wav -q &")
     
 
     elif msg=="Quit!!":
@@ -57,7 +64,7 @@ def showmessage(msg,obj_mando):
     print("\n\n")
 
     if (msg!="Quit!!"):
-        print("\t\t\t\t Score: ", obj_mando.get_score())
+        print("\t\t\t\t\t\t\t Score: ", obj_mando.get_score())
 
     print("\n\n")
 
@@ -78,7 +85,7 @@ timetrack = time.time()
 starttime = time.time()
 refreshcount = 0
 
-obst = generate_obstacles(obj_board.give_grid(), 3, 2)
+obst = generate_obstacles(obj_board.give_grid(), 3, 1)
 coins = generate_coins(obj_board.give_grid(), 100)
 
 counterinc = 1
@@ -244,7 +251,6 @@ while True:
             showmessage("Lives over!!",obj_mando)
             break
 
-os.system("killall aplay -q")
 
 
 

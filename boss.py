@@ -92,5 +92,7 @@ class IceBalls():
 
         if(x+1 >= self.__x and x-1 <= self.__x+2 and y+1 >= self.__y-1 and y-1 <= self.__y+1):
             obj_mando.kill_mando()
+            os.system("aplay funstuff/mandodie.wav -q &")
+            obj_mando.change_score(-50)
 
         

@@ -43,6 +43,7 @@ class Obstacles:
             if self.__killflag == 0:
                 # so he has just come into contact with the laser
                 obj_mando.kill_mando()
+                os.system("aplay funstuff/mandodie.wav -q &")
                 obj_mando.change_score(-50)
             else:
                 # he keeps moving through the same
@@ -69,6 +70,7 @@ class Obstacles:
         
         if self._lives==0:
             self._killed=1
+            os.system("aplay funstuff/stompenemy.wav -q &")
     
     def get_lives(self):
         return self._lives

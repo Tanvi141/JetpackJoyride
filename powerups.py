@@ -19,6 +19,7 @@ class PowerUp():
             self._activated = 1
             self._charged = 0
             self._active_track = time.time()
+            os.system("aplay funstuff/powerup.wav -q &")
 
     def status(self):
         if (self._activated == 1):

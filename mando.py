@@ -172,6 +172,7 @@ class Mando:
 
         if(x_coin<=x_max and x_coin>=x_min and y_coin<=y_max and y_coin>=y_min):
             self.__coins+=1
+            os.system("aplay funstuff/coin.wav -q &")
             obj_coin.erase_coin(grid)
             self.change_score(10)
             
