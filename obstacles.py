@@ -71,6 +71,12 @@ class Obstacles:
     def get_lives(self):
         return self._lives
 
+    def get_x(self):
+        return self._x
+
+    def get_y(self):
+        return self._y
+
 
 class HorizontalBeam(Obstacles):
 
@@ -128,24 +134,38 @@ class DiagonalBeam(Obstacles):
                 grid[self._y+i][self._x+2*i] = STAR
                 grid[self._y+i][self._x+2*i+1] = STAR
 
+
+# class Magnet(Obstacles):
+
+#     def __init__(self,x,y):
+
+
 class CoinBeam(Obstacles):
     
-    def __init__(self,x,y,xrange,yrange):
+    def __init__(self,x,y):
         super().__init__(1)
         self._x=x
         self._y=y
-        self._xrange=xrange
-        self._yrange=yrange
+        self._xrange=1
+        self._yrange=1
         
     def place(self, grid):
         grid[self._y:self._y+self._yrange, self._x:self._x +
                  self._xrange] = np.tile([COIN], (self._yrange, self._xrange))
 
-def generate_lasers(grid):
+
+    def erase_coin(self,grid):
+        self._killed=1
+        self._lives=0
+        grid[self._y,self._x]=' '
+
+
+
+def generate_lasers(grid,num):
 
     obst = []
 
-    for i in range(15):
+    for i in range(num):
         x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
         y = random.randint(SKY+1, HEIGHT-GROUND-1)
         obj = DiagonalBeam(x, y)
@@ -185,14 +205,21 @@ def generate_lasers(grid):
     obst.sort(key=lambda obj: obj._x, reverse=False)
     return obst
 
-def generate_coins(grid):
+def generate_coins(grid,num):
 
-    for i in range(6):
-        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
-        y = random.randint(SKY+1, HEIGHT-GROUND-4)
-        obj = CoinBeam(x,y,16,3)
+    coins=[]
 
-        # while(obj.overlap(grid)):
-        #     x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
-        #     y = random.randint(SKY+1, HEIGHT-GROUND-1)
+    for i in range(num):
+        x = random.randrange(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
+        y = random.randrange(SKY+1, HEIGHT-GROUND-4)
+        obj = CoinBeam(x,HEIGHT-5)
+
+        while(obj.overlap(grid)):
+            x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
+            y = random.randint(SKY+1, HEIGHT-GROUND-1)
+        
         obj.place(grid)
+        coins.append(obj)
+
+    
+    return coins

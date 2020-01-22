@@ -17,6 +17,8 @@ class Mando:
         # creating an empty array to make erasing easier
         self.__empty = np.zeros((3, 3), dtype='<U20')
         self.__empty[:] = ' '
+        self.__oldx=0
+        self.__oldy=0
 
         self.coins = 0
         self.lives = 3
@@ -28,6 +30,11 @@ class Mando:
 
     def get_y(self):
         return self.__y
+
+    def update_old(self):
+        self.__oldx=self.__x
+        self.__oldy=self.__y
+
 
     def generate_shape(self):
         '''Gives Mando's body appropriate shape according to dirn and type of movement
@@ -70,13 +77,16 @@ class Mando:
             else:
                 self.__body[2] = [Fore.LIGHTMAGENTA_EX+'/'+RESET, ' ', Fore.LIGHTMAGENTA_EX+'>'+RESET]
 
-    def place_mando(self, grid,counter):
+    def place_mando(self, grid,counterinc):
         '''Places the mando at appropriate position with torso at x,y and counts the coinss
         '''
         x = self.__x
         y = self.__y
-        m = grid[y-1:y+2, x-1-counter-1:x+2]
-        self.coins += np.count_nonzero(m == COIN)
+        # if self.__fly==1:
+        #     m = grid[y-1:y+2, x-1:x+2]
+        # else:
+        #     m = grid[y-1:y+2, x-1-counterinc+1:x+2]
+        # self.coins += np.count_nonzero(m == COIN)
         grid[y-1:y+2, x-1:x+2] = self.__body
 
     def erase_mando(self, grid,counter):
@@ -84,12 +94,6 @@ class Mando:
         '''
         x = self.__x
         y = self.__y
-        # m = grid[y-1:y+2, x-1-counter:x+2]
-        for i in range(y-1,y+2):
-            for j in range(x-counter-2,x+2):
-                if grid[i][j]==COIN:
-                    self.coins+=1
-                    grid[i][j]=' '
         grid[y-1:y+2, x-1:x+2] = self.__empty
 
     def set_values(self, x, dirn, fly, counter, grid):
@@ -131,3 +135,50 @@ class Mando:
             self.__y += 1
             if self.__y > HEIGHT-GROUND-2:
                 self.__y = HEIGHT-GROUND-2
+    
+    def check_coin(self,obj_coin,grid):
+        if obj_coin.get_lives()==0:
+            return 
+
+        x_coin=obj_coin.get_x()
+        y_coin=obj_coin.get_y()
+
+        x_max=max(self.__x,self.__oldx)+1
+        x_min=min(self.__x,self.__oldx)-1
+        y_max=max(self.__y,self.__oldy)+1
+        y_min=min(self.__y,self.__oldy)-1
+        # print(x_min, x_max,x_coin, y_min, y_max,y_coin)
+
+        if(x_coin<=x_max and x_coin>=x_min and y_coin<=y_max and y_coin>=y_min):
+            self.coins+=1
+            obj_coin.erase_coin(grid)
+
+        # print(x_min, x_max,x_coin, y_min, y_max,y_coin)
+        
+        # while(y_min<=y_max or x_min<=x_max):
+
+        #     if(y_min<=y_max):
+        #         if(self.__oldy<self.__y):
+        #             y=y_min
+        #             y_min+=1
+        #         else:
+        #             y=y_max
+        #             y_max-=1
+            
+        #     if(x_min<=x_max):
+        #         if(self.__oldx<self.__x):
+        #             x=x_min
+        #             x_min+=1
+        #         else:
+        #             x=x_max
+        #             x_max-=1
+            
+
+        #     if(x_coin>=x-1 and x_coin<=x+1 and y_coin>=y-1 and y_coin<=y+1):
+        #         print("yooo000000000000000000000000000000")
+        #         self.coins+=1
+        #         obj_coin.erase_coin(grid)
+      
+        return 
+
+
