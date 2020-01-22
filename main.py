@@ -63,7 +63,7 @@ while True:
             refreshcount = 0
         elif letter == 'a':
             # set 3rd arg as -100 if want to keep in aiif counter < MAXWIDTH-WIDTH on w
-            obj_mando.set_values(counterinc-4, -1, 0, counter)
+            obj_mando.set_values(counterinc-5, -1, 0, counter)
             refreshcount = 0
         elif letter == 'w':
             # unsure if second arg should be 0 or -100
@@ -110,6 +110,8 @@ while True:
 
         for bulls in bullets:
             bulls.move_bullet(obj_board.grid, counterinc)
+        
+        for bulls in bullets:
             bulls.place_bullet(obj_board.grid, counter)
 
         obj_mando.set_airtime()

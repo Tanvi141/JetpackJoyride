@@ -1,7 +1,7 @@
 from obstacles import *
 from headerfile import *
 import numpy as np
-
+import random
 
 class Boss(Obstacles):
 
@@ -17,7 +17,7 @@ class Boss(Obstacles):
                     if char == '\n':
                         break
                     else:
-                        a[y][x] = Fore.LIGHTRED_EX + char+Fore.RESET
+                        a[y][x] = char+Fore.RESET
                     x += 1
                 y += 1
         self.__body = a
@@ -41,6 +41,13 @@ class Boss(Obstacles):
     def place(self, grid):
         grid[self._y:self._y+self._yrange,
              self._x:self._x+self._xrange] = self.__body
+
+        for i in range(self._y,self._y+self._yrange):
+            for j in range(self._x,self._x+self._xrange):
+                if(random.randint(0,1)==1): 
+                    grid[i][j]=Fore.RED+grid[i][j]
+                else:
+                    grid[i][j]=Fore.YELLOW+grid[i][j]
 
     def fire(self,iceballs,obj_mando):
         iceballs.append(IceBalls(self._x,obj_mando.get_y()))
@@ -78,7 +85,7 @@ class IceBalls():
         grid[y-1:y+2, x-1:x+2][:] = ' '
 
     def check_collision_mando(self, obj_mando):
-        if obj_mando.shield==1:
+        if obj_mando.shield==1 or self.__killed==1:
             return
         x = obj_mando.get_x()
         y = obj_mando.get_y()
