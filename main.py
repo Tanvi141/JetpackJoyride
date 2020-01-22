@@ -14,9 +14,9 @@ from powerups import *
 from bullets import *
 from boss import *
 
-def showmessage(msg):
+def showmessage(msg,obj_mando):
     # os.system("clear")
-
+    print("\n\n")
     if msg == "Time Up!!":
         print("\t\t\t _______  ___   __   __  _______    __   __  _______\n" +
               "\t\t\t|       ||   | |  |_|  ||       |  |  | |  ||       |\n" +
@@ -44,7 +44,23 @@ def showmessage(msg):
               "\t\t\t|   |_| ||   _   || ||_|| ||   |___   |       | |     | |   |___ |   |  | |\n"+
               "\t\t\t|_______||__| |__||_|   |_||_______|  |_______|  |___|  |_______||___|  |_|\n")
     
-    print("\n")
+
+    elif msg=="Quit!!":
+        print("\t\t\t __   __  _______  __   __    _______  __   __  ___   _______ \n" +
+              "\t\t\t|  | |  ||       ||  | |  |  |       ||  | |  ||   | |       |\n" +
+              "\t\t\t|  |_|  ||   _   ||  | |  |  |   _   ||  | |  ||   | |_     _|\n" +
+              "\t\t\t|       ||  | |  ||  |_|  |  |  | |  ||  |_|  ||   |   |   |  \n" +
+              "\t\t\t|_     _||  |_|  ||       |  |  |_|  ||       ||   |   |   |  \n" +
+              "\t\t\t  |   |  |       ||       |  |      | |       ||   |   |   |  \n" +
+              "\t\t\t  |___|  |_______||_______|  |____||_||_______||___|   |___|  \n" )
+
+    print("\n\n")
+
+    if (msg!="Quit!!"):
+        print("\t\t\t\t Score: ", obj_mando.get_score())
+
+    print("\n\n")
+
 
 
 os.system("aplay -q funstuff/Jetpack-Joyride-Theme-Song.wav &")
@@ -54,16 +70,16 @@ obj_mando = Mando(0, 0)  # run,fly
 obj_boss = Boss(30)
 
 obj_scenery = Scenery()
-obj_scenery.create_ground(obj_board.grid)
-obj_scenery.create_sky(obj_board.grid)
+obj_scenery.create_ground(obj_board.give_grid())
+obj_scenery.create_sky(obj_board.give_grid())
 
 counter = 3
 timetrack = time.time()
 starttime = time.time()
 refreshcount = 0
 
-obst = generate_obstacles(obj_board.grid, 3, 2)
-coins = generate_coins(obj_board.grid, 100)
+obst = generate_obstacles(obj_board.give_grid(), 3, 2)
+coins = generate_coins(obj_board.give_grid(), 100)
 
 counterinc = 1
 bullets = []
@@ -90,15 +106,16 @@ while True:
         counterinc = obj_speedboost.update(obj_mando)
         obj_shield.update(obj_mando)
 
-        obj_mando.erase_mando(obj_board.grid, counterinc)
+        obj_mando.erase_mando(obj_board.give_grid(), counterinc)
         for ob in obst:
-            ob.place(obj_board.grid)
+            ob.place(obj_board.give_grid())
 
         obj_mando.update_old()
 
         letter = user_input()
         if letter == "q":
-            quit()
+            showmessage("Quit!!",obj_mando)
+            break
         elif letter == "d":
             # set 3rd arg as -100 if want to keep in air on d
             obj_mando.set_values(counterinc+4, 1, 0, counter)
@@ -148,24 +165,24 @@ while True:
         for bulls in bullets:
             for beams in obst:
                 beams.check_collision_bullets(
-                    bulls, obj_board.grid, counterinc, obj_mando)
+                    bulls, obj_board.give_grid(), counterinc, obj_mando)
 
         for bulls in bullets:
-            bulls.move_bullet(obj_board.grid, counterinc)
+            bulls.move_bullet(obj_board.give_grid(), counterinc)
 
         for bulls in bullets:
-            bulls.place_bullet(obj_board.grid, counter)
+            bulls.place_bullet(obj_board.give_grid(), counter)
 
         obj_mando.set_airtime()
 
         for i in range(int(obj_mando.get_airtime()*obj_mando.get_airtime()/2)+1):
             if i != 0:
-                obj_mando.erase_mando(obj_board.grid, counterinc)
+                obj_mando.erase_mando(obj_board.give_grid(), counterinc)
             obj_mando.change_y_mando()
 
             for ob in obst:
                 ob.check_collision_mando(obj_mando, counter)
-            obj_mando.place_mando(obj_board.grid, counterinc)
+            obj_mando.place_mando(obj_board.give_grid(), counterinc)
 
         if counter >= MAXWIDTH-WIDTH:
             firetrack += 1
@@ -173,27 +190,27 @@ while True:
             for ice in iceballs:
                 ice.check_collision_mando(obj_mando)
 
-            obj_boss.position_boss(obj_mando, obj_board.grid)
-            obj_boss.place(obj_board.grid)
+            obj_boss.position_boss(obj_mando, obj_board.give_grid())
+            obj_boss.place(obj_board.give_grid())
             if(firetrack % 4 == 0):
                 obj_boss.fire(iceballs, obj_mando)
 
             for ice in iceballs:
-                ice.move_bullet(obj_board.grid)
+                ice.move_bullet(obj_board.give_grid())
 
             for ice in iceballs:
-                ice.place_bullet(obj_board.grid)
+                ice.place_bullet(obj_board.give_grid())
 
             for bulls in bullets:
                 obj_boss.check_collision_bullets(
-                    bulls, obj_board.grid, counterinc, obj_mando)
+                    bulls, obj_board.give_grid(), counterinc, obj_mando)
 
-        obj_mando.place_mando(obj_board.grid, counterinc)
+        obj_mando.place_mando(obj_board.give_grid(), counterinc)
 
         for c in coins:
-            obj_mando.check_coin(c, obj_board.grid)
+            obj_mando.check_coin(c, obj_board.give_grid())
 
-        obj_mando.place_mando(obj_board.grid, counterinc)
+        obj_mando.place_mando(obj_board.give_grid(), counterinc)
 
         # os.system("clear")
         print("\033[%d;%dH" % (0, 0))
@@ -215,17 +232,16 @@ while True:
 
         timeleft = 100 - (round(time.time()) - round(starttime))
         if timeleft <= 0:
-            showmessage("Time Up!!")
-
+            showmessage("Time Up!!",obj_mando)
             break
 
         if obj_boss.get_lives() == 0:
-            showmessage("You won!!")
+            showmessage("You won!!",obj_mando)
             obj_mando.change_score(100)
             break
 
         if obj_mando.get_lives() == 0:
-            showmessage("Lives over!!")
+            showmessage("Lives over!!",obj_mando)
             break
 
 os.system("killall aplay -q")

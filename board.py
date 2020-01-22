@@ -11,8 +11,8 @@ class Screen:
         '''
         self.__rows = rows
         self.__columns = columns
-        self.grid = np.zeros((HEIGHT, MAXWIDTH), dtype='<U20')
-        self.grid[:] = ' '
+        self.__grid = np.zeros((HEIGHT, MAXWIDTH), dtype='<U20')
+        self.__grid[:] = ' '
 
         # for i in range(self.__columns):
         #     if(i%5==0):
@@ -27,5 +27,8 @@ class Screen:
         for i in range(self.__rows):
                 for j in range(a, a+WIDTH):  # WIDTH columns at a time
                     # print(Back.CYAN+self.grid[i][j]+Back.RESET, end='')
-                    print("\033[1m" + self.grid[i][j], end='')
+                    print("\033[1m" + self.__grid[i][j], end='')
                 print()
+    
+    def give_grid(self):
+        return self.__grid
