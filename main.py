@@ -28,9 +28,9 @@ timetrack = time.time()
 starttime = time.time()
 refreshcount = 0
 
-coins = generate_coins(obj_board.grid, 10)
+obst = generate_obstacles(obj_board.grid,3,2)
+coins = generate_coins(obj_board.grid, 100)
 
-obst = generate_lasers(obj_board.grid, 3)
 counterinc = 1
 bullets = []
 iceballs = []
@@ -59,36 +59,36 @@ while True:
             quit()
         elif letter == 'd':
             # set 3rd arg as -100 if want to keep in air on d
-            obj_mando.set_values(counterinc+3, 1, 0, counter, obj_board.grid)
+            obj_mando.set_values(counterinc+4, 1, 0, counter)
             refreshcount = 0
         elif letter == 'a':
             # set 3rd arg as -100 if want to keep in aiif counter < MAXWIDTH-WIDTH on w
-            obj_mando.set_values(counterinc-3, -1, 0, counter, obj_board.grid)
+            obj_mando.set_values(counterinc-4, -1, 0, counter)
             refreshcount = 0
         elif letter == 'w':
             # unsure if second arg should be 0 or -100
             if counter < MAXWIDTH-WIDTH:
                 obj_mando.set_values(
-                    counterinc, 0, 1, counter, obj_board.grid)
+                    counterinc, 0, 1, counter)
             else:
                 obj_mando.set_values(
-                    0, 0, 1, counter, obj_board.grid)
+                    0, 0, 1, counter)
             refreshcount = 0
         elif refreshcount == 2:
             if counter < MAXWIDTH-WIDTH:
                 obj_mando.set_values(
-                    counterinc, 0, 0, counter, obj_board.grid)
+                    counterinc, 0, 0, counter)
             else:
                 obj_mando.set_values(
-                    0, 0, 0, counter, obj_board.grid)
+                    0, 0, 0, counter)
             refreshcount = 0
         else:
             if counter < MAXWIDTH-WIDTH:
                 obj_mando.set_values(
-                    counterinc, -100, -100, counter, obj_board.grid)
+                    counterinc, -100, -100, counter)
             else:
                 obj_mando.set_values(
-                    0, -100, -100, counter, obj_board.grid)
+                    0, -100, -100, counter)
             refreshcount += 1
 
         if letter == 'l':
@@ -120,7 +120,7 @@ while True:
             obj_mando.change_y_mando()
 
             for ob in obst:
-                ob.check_collision_mando(obj_mando)
+                ob.check_collision_mando(obj_mando,counter)
             obj_mando.place_mando(obj_board.grid, counterinc)
 
 

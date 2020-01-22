@@ -96,7 +96,7 @@ class Mando:
         y = self.__y
         grid[y-1:y+2, x-1:x+2] = self.__empty
 
-    def set_values(self, x, dirn, fly, counter, grid):
+    def set_values(self, x, dirn, fly, counter):
         '''sets appropriate values of mando and returns 1 if in path of obstacle 
         '''
         # if any parameter is passed as -100 that means it should remain unchanged
@@ -152,8 +152,6 @@ class Mando:
         if(x_coin<=x_max and x_coin>=x_min and y_coin<=y_max and y_coin>=y_min):
             self.coins+=1
             obj_coin.erase_coin(grid)
-
-        # print(x_min, x_max,x_coin, y_min, y_max,y_coin)
         
         # while(y_min<=y_max or x_min<=x_max):
 
@@ -175,7 +173,6 @@ class Mando:
             
 
         #     if(x_coin>=x-1 and x_coin<=x+1 and y_coin>=y-1 and y_coin<=y+1):
-        #         print("yooo000000000000000000000000000000")
         #         self.coins+=1
         #         obj_coin.erase_coin(grid)
       

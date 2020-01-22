@@ -28,11 +28,11 @@ class Obstacles:
     def place(self, grid):
         pass
 
-    def check_collision_mando(self, obj_mando):
+    def check_collision_mando(self, obj_mando,counter):
         '''returns 1 if mando has collided with this object
         '''
         if obj_mando.shield == 1 or self._killed == 1:
-            return obj_mando.lives
+            return 
 
         x = obj_mando.get_x()
         y = obj_mando.get_y()
@@ -52,7 +52,7 @@ class Obstacles:
             # he is not in contact with the laser
             self.__killflag = 0
 
-        return obj_mando.lives
+        return 
 
     def check_collision_bullets(self, obj_bullet,grid,counterinc):
         if obj_bullet.killed() or self._killed == 1:
@@ -135,9 +135,40 @@ class DiagonalBeam(Obstacles):
                 grid[self._y+i][self._x+2*i+1] = STAR
 
 
-# class Magnet(Obstacles):
+class Magnet(Obstacles):
 
-#     def __init__(self,x,y):
+    def __init__(self,x,y):
+        super().__init__(1)
+        self._x=x
+        self._y=y
+        self._xrange=3
+        self._yrange=3
+        self._magx=40
+    
+    def check_collision_mando(self, obj_mando,counter):
+
+        if obj_mando.shield == 1 or self._killed == 1:
+            return 
+
+        x = obj_mando.get_x()
+
+        if(x<=self._x+1 and x>=self._x-1):
+            return
+
+        if(x>self._x+1 and x<self._x+1 + self._magx):
+            obj_mando.set_values(-3,-100,-100,counter)
+
+        if(x<self._x+1 and x>self._x+1 - self._magx):
+            obj_mando.set_values(3,-100,-100,counter)
+
+
+    def place(self, grid):
+        if(self._killed) == 1:
+            grid[self._y:self._y+self._yrange, self._x:self._x +
+                 self._xrange] = np.tile([' '], (self._yrange, self._xrange))
+        else:
+            grid[self._y:self._y+self._yrange, self._x:self._x +
+                 self._xrange] = np.tile([Back.RED+'m'+Back.RESET], (self._yrange, self._xrange))
 
 
 class CoinBeam(Obstacles):
@@ -161,7 +192,7 @@ class CoinBeam(Obstacles):
 
 
 
-def generate_lasers(grid,num):
+def generate_obstacles(grid,num,nummag):
 
     obst = []
 
@@ -202,6 +233,19 @@ def generate_lasers(grid,num):
         obj.place(grid)
         obst.append(obj)
 
+    for i in range(nummag):
+        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
+        y = random.randint(SKY+1, HEIGHT-GROUND-1)
+        obj = Magnet(x, y)
+
+        while(obj.overlap(grid)):
+            x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
+            y = random.randint(SKY+1, HEIGHT-GROUND-1)
+            # print(x,y)
+            obj = Magnet(x, y)
+        obj.place(grid)
+        obst.append(obj)
+        
     obst.sort(key=lambda obj: obj._x, reverse=False)
     return obst
 
@@ -212,11 +256,12 @@ def generate_coins(grid,num):
     for i in range(num):
         x = random.randrange(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
         y = random.randrange(SKY+1, HEIGHT-GROUND-4)
-        obj = CoinBeam(x,HEIGHT-5)
+        obj = CoinBeam(x,y)
 
         while(obj.overlap(grid)):
             x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
             y = random.randint(SKY+1, HEIGHT-GROUND-1)
+            obj = CoinBeam(x,y)
         
         obj.place(grid)
         coins.append(obj)
