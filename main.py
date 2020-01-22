@@ -12,10 +12,12 @@ from obstacles import *
 from scenery import *
 from powerups import * 
 from bullets import *
+from boss import *
 
 
 obj_board = Screen(HEIGHT, MAXWIDTH)
 obj_mando = Mando(0, 0)  # run,fly
+obj_boss=Boss()
 
 obj_scenery = Scenery()
 obj_scenery.create_ground(obj_board.grid)
@@ -30,9 +32,11 @@ generate_coins(obj_board.grid)
 obst = generate_lasers(obj_board.grid)
 counterinc=1
 bullets=[]
+iceballs=[]
+firetrack=0
 
 obj_shield=Shield(10,10)
-obj_speedboost=SpeedBoost(10,10)
+obj_speedboost=SpeedBoost(2,15)
 
 while True:
 
@@ -91,6 +95,9 @@ while True:
             bullets.append(Bullets(obj_mando))
 
         obj_mando.generate_shape()
+        
+        if counter < MAXWIDTH-WIDTH:
+            counter += counterinc
 
         for bulls in bullets:
             for beams in obst:
@@ -107,30 +114,54 @@ while True:
             obj_mando.change_y_mando()
 
             for ob in obst:
-                if(ob.check_collision_mando(obj_mando) == 0):
-                    print('Lives over!!')
-                    quit()
-                
+                ob.check_collision_mando(obj_mando) 
             obj_mando.place_mando(obj_board.grid,counterinc)
+
+
+        if counter >= MAXWIDTH-WIDTH:
+            firetrack+=1
+            obst=[]
+            for ice in iceballs:
+                ice.check_collision_mando(obj_mando)
+
+            obj_boss.position_boss(obj_mando,obj_board.grid)
+            obj_boss.place(obj_board.grid)
+            if(firetrack%4==0):
+                obj_boss.fire(iceballs,obj_mando)
+
+            for ice in iceballs:
+                ice.move_bullet(obj_board.grid)
+            
+            for ice in iceballs:
+                ice.place_bullet(obj_board.grid)
+
+            for bulls in bullets:
+                obj_boss.check_collision_bullets(bulls,obj_board.grid,counterinc)
+       
+        obj_mando.place_mando(obj_board.grid,counterinc)
 
         timeleft = 150 - (round(time.time()) - round(starttime))
         if timeleft <= 0:
             print('Time Up!!')
             break
 
+        if obj_boss.get_lives()==0:
+            print('You won!!')
+            break
+
+        if obj_mando.lives==0:
+            print('Lives over!!')
+            break
+
         os.system('clear')
         print("Time:", 150 -
               (round(time.time()) - round(starttime)), end='\t\t\t')
         print("Lives:", obj_mando.lives, end='\t\t\t')
-        print(len(bullets))
+        if counter >= MAXWIDTH-WIDTH: print("the end is near BOSS LIVES: ", obj_boss.get_lives())
         print("SpeedUp: " + obj_speedboost.status())
         print("Shield: " + obj_shield.status())
         print(Fore.YELLOW + "$$:" + Fore.RESET, obj_mando.coins)
         obj_board.show_board(counter)
-        # obj_board.show_all()
-
-        if counter < MAXWIDTH-WIDTH:
-            counter += counterinc
 
 
 #   0 |
@@ -149,3 +180,4 @@ while True:
 
 
 # bug: press and hold w key, press d once he falls
+# bulls delete unsued bullets

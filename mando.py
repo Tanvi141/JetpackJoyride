@@ -53,22 +53,22 @@ class Mando:
         
         else:
             if self.__fly == 1:
-                self.__body[0] = [Fore.CYAN+'\\'+RESET, Fore.CYAN+'0'+RESET, Fore.CYAN+'/'+RESET]
-                self.__body[1] = [' ', Fore.CYAN+Back.CYAN+'|'+RESET, ' ']
+                self.__body[0] = [Fore.LIGHTMAGENTA_EX+'\\'+RESET, Fore.LIGHTMAGENTA_EX+'0'+RESET, Fore.LIGHTMAGENTA_EX+'/'+RESET]
+                self.__body[1] = [' ', Fore.LIGHTMAGENTA_EX+Back.LIGHTMAGENTA_EX+'|'+RESET, ' ']
 
             else:
-                self.__body[0] = [' ', Fore.CYAN+'0'+RESET, ' ']
-                self.__body[1] = [Fore.CYAN+'/'+RESET,Fore.CYAN +
-                                Back.CYAN+'|'+RESET, Fore.CYAN+'\\'+RESET]
+                self.__body[0] = [' ', Fore.LIGHTMAGENTA_EX+'0'+RESET, ' ']
+                self.__body[1] = [Fore.LIGHTMAGENTA_EX+'/'+RESET,Fore.LIGHTMAGENTA_EX +
+                                Back.LIGHTMAGENTA_EX+'|'+RESET, Fore.LIGHTMAGENTA_EX+'\\'+RESET]
 
             if self.__dirn == 0:
-                self.__body[2] = [Fore.CYAN+'/'+RESET, ' ', Fore.CYAN+'\\'+RESET]
+                self.__body[2] = [Fore.LIGHTMAGENTA_EX+'/'+RESET, ' ', Fore.LIGHTMAGENTA_EX+'\\'+RESET]
 
             elif self.__dirn == -1:
-                self.__body[2] = [Fore.CYAN+'<'+RESET, ' ', Fore.CYAN+'\\'+RESET]
+                self.__body[2] = [Fore.LIGHTMAGENTA_EX+'<'+RESET, ' ', Fore.LIGHTMAGENTA_EX+'\\'+RESET]
 
             else:
-                self.__body[2] = [Fore.CYAN+'/'+RESET, ' ', Fore.CYAN+'>'+RESET]
+                self.__body[2] = [Fore.LIGHTMAGENTA_EX+'/'+RESET, ' ', Fore.LIGHTMAGENTA_EX+'>'+RESET]
 
     def place_mando(self, grid,counter):
         '''Places the mando at appropriate position with torso at x,y and counts the coinss

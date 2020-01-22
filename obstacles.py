@@ -8,7 +8,7 @@ class Obstacles:
 
     def __init__(self, lives):
         self._killed = 0
-        self._lives = 1  # boss should have more lives
+        self._lives = lives  # boss should have more lives
         self._x = 0  # declaring variable with some dummy value
         self._y = 0  # declaring variable with some dummy value
         self._xrange = 0  # declaring variable with some dummy value
@@ -63,7 +63,13 @@ class Obstacles:
 
         if x+4+counterinc >= self._x and x-1 < self._x + self._xrange and y >= self._y and y < self._y+self._yrange:
             obj_bullet.kill(grid)
-            self._killed = 1
+            self._lives -= 1
+        
+        if self._lives==0:
+            self._killed=1
+    
+    def get_lives(self):
+        return self._lives
 
 
 class HorizontalBeam(Obstacles):
@@ -139,37 +145,37 @@ def generate_lasers(grid):
 
     obst = []
 
-    for i in range(5):
-        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+    for i in range(15):
+        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
         y = random.randint(SKY+1, HEIGHT-GROUND-1)
         obj = DiagonalBeam(x, y)
 
         while(obj.overlap(grid)):
-            x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+            x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
             y = random.randint(SKY+1, HEIGHT-GROUND-1)
             # print(x,y)
             obj = DiagonalBeam(x, y)
         obj.place(grid)
         obst.append(obj)
 
-        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
         y = random.randint(SKY+1, HEIGHT-GROUND-1)
         obj = HorizontalBeam(x, y)
 
         while(obj.overlap(grid)):
-            x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+            x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
             y = random.randint(SKY+1, HEIGHT-GROUND-1)
             # print(x,y)
             obj = HorizontalBeam(x, y)
         obj.place(grid)
         obst.append(obj)
 
-        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
         y = random.randint(SKY+1, HEIGHT-GROUND-1)
         obj = VerticalBeam(x, y)
 
         while(obj.overlap(grid)):
-            x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+            x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
             y = random.randint(SKY+1, HEIGHT-GROUND-1)
             # print(x,y)
             obj = VerticalBeam(x, y)
@@ -181,12 +187,12 @@ def generate_lasers(grid):
 
 def generate_coins(grid):
 
-    for i in range(20):
-        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+    for i in range(6):
+        x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
         y = random.randint(SKY+1, HEIGHT-GROUND-4)
         obj = CoinBeam(x,y,16,3)
 
         # while(obj.overlap(grid)):
-        #     x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-10)
+        #     x = random.randint(PLACEWIDTH+5, MAXWIDTH-WIDTH-25)
         #     y = random.randint(SKY+1, HEIGHT-GROUND-1)
         obj.place(grid)

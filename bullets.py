@@ -32,13 +32,17 @@ class Bullets():
             self.__old2=grid[self.__y][self.__x-1]
             grid[self.__y][self.__x]=">"
             grid[self.__y][self.__x-1]="="
+            if counter >= MAXWIDTH-WIDTH-5:
+                self.__old1=' '
+                self.__old2=' '
+    
 
     def move_bullet(self,grid,counterinc):
         if self.__killed==0:
             grid[self.__y][self.__x]=self.__old1
             grid[self.__y][self.__x-1]=self.__old2
             self.__x+=4+counterinc
-    
+
     def get_x(self):
         return self.__x
 
